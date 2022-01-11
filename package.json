@@ -18,6 +18,8 @@
     "dotenv": "^8.2.0",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
-    "node-notifier": "^10.0.0"
+    "mariadb": "^2.5.5",
+    "node-notifier": "^10.0.0",
+    "winston": "^3.4.0"
   }
 }
