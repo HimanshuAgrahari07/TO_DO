@@ -26,17 +26,14 @@ const runQuery = async (query, { id } = {}, next) => {
     try {
         connection = await pool.getConnection();
         res = await connection.query(query, id);
-        console.log(res);
-        if (next) next();
-
-        return res;
+        console.log(`res ====> `, res);
+        return res
     } catch (err) {
         throw err;
-    } finally {
-        if (connection) return connection.end();
     }
-
-    return res
+    finally {
+        if (connection) connection.end();
+    }
 }
 
 module.exports = {

@@ -8,11 +8,11 @@ let routes = app => {
         res.status(200).json({id: 8})
     });
 
-    router.get('/:id', getById)
+    router.get('/:id(\\d)', getById)
 
-    router.post('/:id', insertNewRow)
+    router.post('/', insertNewRow)
 
-    return app.use("/", router);
+    return app.use("/todo", router);
 };
 
 module.exports = routes;

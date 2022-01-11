@@ -9,7 +9,7 @@ const handleResponseStatus = (req, res, { statusCode, message, jsonDataToReturn 
             errorcode: 'BAD_REQUEST',
         }
 
-        res.json(jsonDataToReturn || responseObj).send(responseObj)
+        res.json(jsonDataToReturn || responseObj)
     }
 
     if (statusCode === 200) {
@@ -20,7 +20,7 @@ const handleResponseStatus = (req, res, { statusCode, message, jsonDataToReturn 
             errorcode: 'BAD_REQUEST',
         }
 
-        res.json(jsonDataToReturn || responseObj).send(responseObj)
+        res.json(jsonDataToReturn || responseObj)
     }
 
     if (next) next()

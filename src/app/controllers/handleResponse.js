@@ -1,17 +1,15 @@
 const { runQuery } = require('./../../config/database')
 const { handleResponseStatus } = require('./../../app/middlewares/responseStatus')
 
-const _run = async (req, res, query, param, callback) => {
+const _run = async (req, res, query, param) => {
     try {
         const queryDataFromDB = await runQuery(query, param)
         console.log('queryDataFromDB ===> ', queryDataFromDB)
         
-        const dataToReturn = queryDataFromDB && queryDataFromDB[0];
+        const dataToReturn = queryDataFromDB;
         handleResponseStatus(req, res, { statusCode: 200, jsonDataToReturn: dataToReturn })
-        if (callback) callback()
     } catch (err) {
         handleResponseStatus(req, res, { statusCode: 400 })
-        if (callback) callback()
     }
 }
 
