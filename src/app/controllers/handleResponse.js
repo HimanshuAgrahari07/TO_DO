@@ -8,7 +8,11 @@ const _run = async (req, res, query) => {
     try {
         console.log('query ===> ', query)
         const queryDataFromDB = await runQuery(query)
-        console.log('queryDataFromDB ===> ', queryDataFromDB)
+        console.log('rows count ===> ', queryDataFromDB.length)
+
+        const hasRecords = queryDataFromDB && queryDataFromDB.length !== 0
+        if (!hasRecords) return handleResponseStatus(req, res, { statusCode: 200, message: 'No records found' })
+        
         handleResponseStatus(req, res, { statusCode: 200, jsonDataToReturn: queryDataFromDB })
     } catch (err) {
         console.log(err)
@@ -40,20 +44,22 @@ const insertRow = async (req, res, next) => {
 }
 
 const updateRow = async (req, res, next) => {
-    const { id, name, status, isDeleted } = req.body
-    if (!id) handleResponseStatus(req, res, { message: 'id, name, status or isDeleted missing', statusCode: 400 })
+    const id = req.params.id
+    const body = req.body;
+    const tableColumns = ['name', 'status', 'isDeleted']
 
+    const regex = tableColumns.join('|')
+    const requiredData = Object.entries(body).filter(e => e[0].match(regex))
+    const queryString = requiredData.map(e => `${e[0]}='${e[1]}'`).join(', ')
     const query = `update ${table}
-    set name = '${name}',
-    status = '${status}',
-    isDeleted = '${isDeleted}'
+    set ${queryString}
     where id = ${id};`
 
     await _run(req, res, query)
 }
 
 const deleteRow = async (req, res, next) => {
-    const { id } = req.body
+    const id = req.params.id
     if (!id) handleResponseStatus(req, res, { message: "Id is required", statusCode: 400 })
 
     const query = `update ${table}

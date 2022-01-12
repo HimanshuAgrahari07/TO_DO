@@ -10,9 +10,9 @@ let routes = app => {
 
     router.post('/', insertRow)
 
-    router.put('/', updateRow)
+    router.put('/:id(\\d+)', updateRow)
 
-    router.delete('/', deleteRow)
+    router.delete('/:id(\\d+)', deleteRow)
 
     return app.use("/todo", router);
 };

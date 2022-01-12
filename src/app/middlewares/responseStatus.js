@@ -72,7 +72,6 @@ const handleResponseStatus = (req, res, { statusCode, message, jsonDataToReturn 
             status: 200,
             message: message || statusCodes[200],
             statusText: 'SUCCESS',
-            errorcode: 'BAD_REQUEST',
         }
 
         res.json(jsonDataToReturn || responseObj)
