@@ -8,6 +8,16 @@ require('dotenv').config()
 
 const port = process.env.PORT || 3000;
 
+process.on('uncaughtException', (error) => {
+    console.log('Alert! ERROR : ', error);
+    process.exit(1); // Exit your app 
+})
+
+process.on('unhandledRejection', (error, promise) => {
+    console.log('Alert! ERROR : ', error);
+    process.exit(1); // Exit your app 
+})
+
 /** Middleware */
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())

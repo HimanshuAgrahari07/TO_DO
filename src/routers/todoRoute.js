@@ -3,7 +3,6 @@ const router = express.Router();
 const { getAllRows, getRowById, insertRow, updateRow, deleteRow } = require("./../app/controllers/handleResponse")
 
 let routes = app => {
-    console.log('request recieved')
     router.get("/", getAllRows);
 
     router.get('/:id(\\d+)', getRowById)
