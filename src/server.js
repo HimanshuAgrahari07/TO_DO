@@ -1,5 +1,4 @@
 const express = require('express')
-const errorhandler = require('errorhandler')
 const bodyParser = require('body-parser');
 const initRoutes = require("./routers/todoRoute");
 const { logger } = require('./app/middlewares/logger')
@@ -11,6 +10,7 @@ const port = process.env.PORT || 3000;
 
 /** Middleware */
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json())
 
 /**Logger */
 app.use(function (req, res, next) {
@@ -20,12 +20,13 @@ app.use(function (req, res, next) {
 
         logger.log({
             level: 'info',
-            // rawHeaders,
+            rawHeaders,
             httpVersion,
             method,
-            // remoteAddress,
-            // remoteFamily,
-            url
+            remoteAddress,
+            remoteFamily,
+            url,
+            body: req.body
         });
 
         next()

@@ -11,13 +11,16 @@ const pool = mariadb.createPool({
     port: 3307
 });
 
-const runQuery = async (query, { id } = {}, next) => {
-    if (!(query && id)) {
+const runQuery = async (query, next) => {
+    logger.log({
+        level: 'info',
+        query: query,
+    });
+
+    if (!query) {
         logger.log({
             level: 'error',
-            query: query,
-            id: id,
-            message: 'query or id is missing'
+            message: 'query is missing'
         });
     }
 
@@ -25,13 +28,13 @@ const runQuery = async (query, { id } = {}, next) => {
     let res;
     try {
         connection = await pool.getConnection();
-        res = await connection.query(query, id);
-        console.log(`res ====> `, res);
+        res = await connection.query(query);
         return res
     } catch (err) {
         throw err;
     }
     finally {
+        console.log('Closing connection')
         if (connection) connection.end();
     }
 }

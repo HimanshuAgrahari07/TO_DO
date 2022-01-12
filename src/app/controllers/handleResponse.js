@@ -1,29 +1,66 @@
 const { runQuery } = require('./../../config/database')
 const { handleResponseStatus } = require('./../../app/middlewares/responseStatus')
+require('dotenv').config()
 
-const _run = async (req, res, query, param) => {
+const table = process.env.DB_TODO_TABLE
+
+const _run = async (req, res, query) => {
     try {
-        const queryDataFromDB = await runQuery(query, param)
+        console.log('query ===> ', query)
+        const queryDataFromDB = await runQuery(query)
         console.log('queryDataFromDB ===> ', queryDataFromDB)
-        
-        const dataToReturn = queryDataFromDB;
-        handleResponseStatus(req, res, { statusCode: 200, jsonDataToReturn: dataToReturn })
+        handleResponseStatus(req, res, { statusCode: 200, jsonDataToReturn: queryDataFromDB })
     } catch (err) {
+        console.log(err)
         handleResponseStatus(req, res, { statusCode: 400 })
     }
 }
 
-const getById = async (req, res, next) => {
+const getAllRows = async (req, res, next) => {
+    const query = `Select * from ${table}`;
+
+    await _run(req, res, query)
+}
+
+const getRowById = async (req, res, next) => {
     const id = req.params.id
-    const query = "Select * from todo_list where id = ?"
-    await _run(req, res, query, { id })
+    if (!id) throw new Error('No id passed')
+
+    const query = `Select * from ${table} where id = ${id}`
+    await _run(req, res, query)
 }
 
-const insertNewRow = async (req, res, next) => {
-    const { id, item, minutes, todo_deleted = false } = req.body
-    if (!(item && minutes)) res.status(500).json({})
-    const query = `INSERT INTO todo_list (item, minutes, todo_deleted) VALUES ('${item}', ${minutes}, ${todo_deleted});`
-    await _run(req, res, query, { id })
+const insertRow = async (req, res, next) => {
+    const { name } = req.body
+    if (!name) handleResponseStatus(req, res, { statusCode: 400 })
+
+    const query = `INSERT INTO ${table} (name) VALUES ('${name}');`
+
+    await _run(req, res, query)
 }
 
-module.exports = { getById, insertNewRow }
+const updateRow = async (req, res, next) => {
+    const { id, name, status, isDeleted } = req.body
+    if (!id) handleResponseStatus(req, res, { message: 'id, name, status or isDeleted missing', statusCode: 400 })
+
+    const query = `update ${table}
+    set name = '${name}',
+    status = '${status}',
+    isDeleted = '${isDeleted}'
+    where id = ${id};`
+
+    await _run(req, res, query)
+}
+
+const deleteRow = async (req, res, next) => {
+    const { id } = req.body
+    if (!id) handleResponseStatus(req, res, { message: "Id is required", statusCode: 400 })
+
+    const query = `update ${table}
+    set isDeleted = '1'
+    where id = ${id};`
+
+    await _run(req, res, query)
+}
+
+module.exports = { getAllRows, getRowById, insertRow, updateRow, deleteRow }

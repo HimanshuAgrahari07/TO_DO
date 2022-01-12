@@ -1,16 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { getById, insertNewRow } = require("./../app/controllers/handleResponse")
+const { getAllRows, getRowById, insertRow, updateRow, deleteRow } = require("./../app/controllers/handleResponse")
 
 let routes = app => {
     console.log('request recieved')
-    router.get("/", (req, res) => {
-        res.status(200).json({id: 8})
-    });
+    router.get("/", getAllRows);
 
-    router.get('/:id(\\d)', getById)
+    router.get('/:id(\\d+)', getRowById)
 
-    router.post('/', insertNewRow)
+    router.post('/', insertRow)
+
+    router.put('/', updateRow)
+
+    router.delete('/', deleteRow)
 
     return app.use("/todo", router);
 };
