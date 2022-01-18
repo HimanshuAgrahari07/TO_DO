@@ -6,7 +6,7 @@ import RoutersI from './interfaces/router.interface';
 
 class App {
   public app: express.Application;
-  
+
   constructor(routes: RoutersI[]) {
     this.app = express();
 
@@ -37,6 +37,11 @@ class App {
   private initializeRouters(routes: RoutersI[]) {
     routes.forEach((route) => {
       this.app.use('/', route.router);
+    });
+
+    this.app.use(function (req, res) {
+      // res.status(404).render('404.jade');
+      res.status(404).json({ message: 'Route  not found', status: 404 });
     });
   }
 }
