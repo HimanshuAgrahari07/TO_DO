@@ -19,8 +19,6 @@ const poolDetails = {
     port: Number(DB_PORT)
 }
 
-console.log('env variable: ' + JSON.stringify(poolDetails))
-
 const pool = mariadb.createPool(poolDetails);
 
 const runQuery = async (query: string) => {
@@ -34,7 +32,6 @@ const runQuery = async (query: string) => {
         throw err;
     }
     finally {
-        console.log('Closing connection')
         if (connection) connection.end();
     }
 }

@@ -1,11 +1,9 @@
 import 'dotenv/config';
 import App from './app';
-import TodoController from './app/controllers/todo/todo.controller';
+import ToDoRoutes from './routes/Todo'
 
-const app = new App(
-  [
-    new TodoController(),
-  ],
-);
+const app = new App([
+    new ToDoRoutes()
+]);
 
 app.listen();

@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction, Router } from 'express';
+
 enum status {
     SUCCESS = 'SUCCESS',
     FAIL = 'FAIL'
@@ -30,13 +32,11 @@ export const GenericError = {
     }
 }
 
-export const SucessResponse = {
-    Sucess: {
-        error: {
-            status: 200,
-            message: 'Request completed successfully',
-            statusText: status.SUCCESS,
-            errorCode: 'SUCCESS',
-        }
-    }
+export const SuccessResponse = (request: Request, response: Response, data? : any) => {
+    response.status(200).json({
+        status: 200,
+        message: 'Request completed successfully',
+        statusText: status.SUCCESS,
+        data: data
+    })
 }

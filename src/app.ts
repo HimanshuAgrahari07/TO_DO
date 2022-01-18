@@ -1,16 +1,17 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import Controller from './app/interfaces/controller.interface';
-import errorMiddleware from './app/middlewares/error.middleware';
+import errorMiddleware from './middlewares/error.middleware';
+import loggerMiddleware from './middlewares/logger.middleware'
+import RoutersI from './interfaces/router.interface';
 
 class App {
   public app: express.Application;
-
-  constructor(controllers: Controller[]) {
+  
+  constructor(routes: RoutersI[]) {
     this.app = express();
 
-    this.initializeMiddlewares();
-    this.initializeControllers(controllers);
+    this.initializeMiddleware();
+    this.initializeRouters(routes);
     this.initializeErrorHandling();
   }
 
@@ -24,17 +25,18 @@ class App {
     return this.app;
   }
 
-  private initializeMiddlewares() {
+  private initializeMiddleware() {
     this.app.use(bodyParser.json());
+    this.app.use(loggerMiddleware)
   }
 
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
   }
 
-  private initializeControllers(controllers: Controller[]) {
-    controllers.forEach((controller) => {
-      this.app.use('/', controller.router);
+  private initializeRouters(routes: RoutersI[]) {
+    routes.forEach((route) => {
+      this.app.use('/', route.router);
     });
   }
 }
